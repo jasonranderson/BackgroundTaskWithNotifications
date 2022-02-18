@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G417" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ActiveTileEntity" representedClassName="ActiveTileEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="isSaved" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="tile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TileEntity" inverseName="activeTile" inverseEntity="TileEntity"/>
+    </entity>
+    <entity name="TileEntity" representedClassName="TileEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="identifier" attributeType="String"/>
+        <attribute name="text" attributeType="String"/>
+        <relationship name="activeTile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ActiveTileEntity" inverseName="tile" inverseEntity="ActiveTileEntity"/>
+    </entity>
+    <elements>
+        <element name="TileEntity" positionX="-63" positionY="-18" width="128" height="74"/>
+        <element name="ActiveTileEntity" positionX="-54" positionY="-9" width="128" height="59"/>
+    </elements>
+</model>
