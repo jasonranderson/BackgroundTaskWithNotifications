@@ -12,7 +12,7 @@ import CoreData
 let identifier: String = "com.kosoku.BackgroundTaskWithNotifications.tileAssignment"
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     let modelProvider = ModelProvider()
 
@@ -29,6 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.handleTileAssignment(task: task as! BGAppRefreshTask)
         }
         
+        UNUserNotificationCenter.current().delegate = self
+        
         return true
     }
 
@@ -39,6 +41,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {}
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.banner)
+    }
 
     func scheduleTileAssignment() {
         let request = BGAppRefreshTaskRequest(identifier: identifier)
@@ -65,7 +71,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let entityName = TileEntity.entity().name, let tiles = try? modelProvider.viewContext.fetch(NSFetchRequest(entityName: entityName)) {
             
             let inactiveTiles = tiles.filter { ($0 as? TileEntity)?.activeTile == nil }
-            guard let scheduledTile = inactiveTiles.randomElement() as? TileEntity else { return }
+            print("inactive tiles \(inactiveTiles)")
+            guard let scheduledTile = inactiveTiles.randomElement() as? TileEntity else {
+                print("tile not selected, returning early")
+                return
+            }
             
             _ = ActiveTileEntity(context: modelProvider.viewContext, tile: scheduledTile)
             
